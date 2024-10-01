@@ -1,26 +1,62 @@
-// src/App.js
 import React, { useState } from "react";
-import "./App.css";
 
 const Calculator = () => {
   const [input, setInput] = useState("");
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState("");
 
-  const handleClick = (value) => {
-    setInput(input + value);
+  const handleButtonClick = (value) => {
+    setInput((prevInput) => prevInput + value);
+  };
+
+  const calculate = (expression) => {
+    expression = expression.replace(/\s+/g, "");
+    const numberRegex = /\d+(\.\d+)?/g;
+    const operatorRegex = /[+\-*/]/g;
+
+    const numbers = expression.match(numberRegex).map(Number);
+    const operators = expression.match(operatorRegex);
+
+    const priorityOperators = ["*", "/"];
+    let result = numbers[0];
+
+    for (let i = 0; i < operators.length; i++) {
+      const operator = operators[i];
+
+      if (priorityOperators.includes(operator)) {
+        if (operator === "*") {
+          result *= numbers[i + 1];
+        } else if (operator === "/") {
+          result /= numbers[i + 1];
+        }
+        numbers[i + 1] = null;
+      } else {
+        result = numbers[i + 1] !== null ? result : numbers[i];
+      }
+    }
+
+    for (let i = 0; i < operators.length; i++) {
+      const operator = operators[i];
+      if (operator === "+") {
+        result += numbers[i + 1];
+      } else if (operator === "-") {
+        result -= numbers[i + 1];
+      }
+    }
+
+    return result;
+  };
+
+  const handleCalculate = () => {
+    try {
+      setResult(calculate(input));
+    } catch (error) {
+      setResult("Error");
+    }
   };
 
   const handleClear = () => {
     setInput("");
-    setResult(null);
-  };
-
-  const handleEqual = () => {
-    try {
-      setResult(eval(input)); // Basic calculation using eval (not recommended for real apps)
-    } catch (error) {
-      setResult("Error");
-    }
+    setResult("");
   };
 
   return (
@@ -28,29 +64,28 @@ const Calculator = () => {
       <h1>Calculator</h1>
       <div className="display">
         <input type="text" value={input} readOnly />
-        {result !== null && (
-          <div className="result" data-testid="result">
-            {result}
-          </div>
-        )}
+        <div className="showResult">
+          <div className="result">{result}</div>
+        </div>
       </div>
       <div className="buttons">
-        <button onClick={() => handleClick("1")}>1</button>
-        <button onClick={() => handleClick("2")}>2</button>
-        <button onClick={() => handleClick("3")}>3</button>
-        <button onClick={() => handleClick("+")}>+</button>
-        <button onClick={() => handleClick("4")}>4</button>
-        <button onClick={() => handleClick("5")}>5</button>
-        <button onClick={() => handleClick("6")}>6</button>
-        <button onClick={() => handleClick("-")}>-</button>
-        <button onClick={() => handleClick("7")}>7</button>
-        <button onClick={() => handleClick("8")}>8</button>
-        <button onClick={() => handleClick("9")}>9</button>
-        <button onClick={() => handleClick("*")}>*</button>
-        <button onClick={() => handleClick("0")}>0</button>
+        {/* Add buttons for numbers and operators */}
+        <button onClick={() => handleButtonClick("1")}>1</button>
+        <button onClick={() => handleButtonClick("2")}>2</button>
+        <button onClick={() => handleButtonClick("3")}>3</button>
+        <button onClick={() => handleButtonClick("+")}>+</button>
+        <button onClick={() => handleButtonClick("4")}>4</button>
+        <button onClick={() => handleButtonClick("5")}>5</button>
+        <button onClick={() => handleButtonClick("6")}>6</button>
+        <button onClick={() => handleButtonClick("-")}>-</button>
+        <button onClick={() => handleButtonClick("7")}>7</button>
+        <button onClick={() => handleButtonClick("8")}>8</button>
+        <button onClick={() => handleButtonClick("9")}>9</button>
+        <button onClick={() => handleButtonClick("*")}>*</button>
+        <button onClick={() => handleButtonClick("0")}>0</button>
         <button onClick={handleClear}>C</button>
-        <button onClick={handleEqual}>=</button>
-        <button onClick={() => handleClick("/")}>/</button>
+        <button onClick={handleCalculate}>=</button>
+        <button onClick={() => handleButtonClick("/")}>/</button>
       </div>
     </div>
   );
