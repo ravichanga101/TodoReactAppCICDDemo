@@ -27,9 +27,6 @@ jobs:
       - name: Build the app
         run: npm run build
 
-      - name: Clear gh-pages cache
-        run: rm -rf node_modules/.cache/gh-pages
-
       - name: Deploy to GitHub Pages
         run: npm run deploy
         env:
