@@ -30,4 +30,4 @@ jobs:
       - name: Deploy to Local Server
         run: |
           # Copy the build files to your server's root directory
-          xcopy /E /I /Y build\* "D:\DevOps-SE-Sem-5\ReactCICDApp\"
+          xcopy /E /I /Y build\* "D:\ReactApp\"
