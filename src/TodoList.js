@@ -25,7 +25,7 @@ const TodoList = () => {
 
   return (
     <div>
-      <h1>To-Do List @CHARUSAT</h1>
+      <h1>To-Do List @CSPIT</h1>
       <input
         type="text"
         placeholder="Add a new task"
